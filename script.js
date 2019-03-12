@@ -2,9 +2,10 @@ const inputField = document.getElementById('search')
 const results = document.getElementById('results')
 
 const goWiki = (word) => {
-  fetch("https://cors-anywhere.herokuapp.com/" + `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages%7Cpageterms%7Cdescription%7Ciwlinks&iwurl=1&generator=prefixsearch&redirects=1&formatversion=2&piprop=thumbnail&pithumbsize=300&pilimit=10&wbptterms=description&gpssearch=${word}&gpslimit=10`)
+  fetch("https://cors-anywhere.herokuapp.com/" + `https://fr.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages%7Cpageterms%7Cdescription%7Ciwlinks&iwurl=1&generator=prefixsearch&redirects=1&formatversion=2&piprop=thumbnail&pithumbsize=300&pilimit=10&wbptterms=description&gpssearch=${word}&gpslimit=10`)
     .then(response => response.json())
     .then(data => data.query ? insertData(data.query.pages) : console.log('...'))
+    // .then(data => console.log(data))
 }
 
 const search = () => {
@@ -63,7 +64,7 @@ const insertData = (data) => {
 
       <div class="content">
         ${data[i].terms ? data[i].terms.description[0] : '...'}
-        <a href="#">Go Wiki</a>
+        <a href="${data[i].title ? 'https://fr.wikipedia.org/wiki/' + data[i].title.replace(/\s/, '_') : '#'}">Go Wiki</a>
         <br>
         <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
       </div>
