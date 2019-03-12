@@ -12,7 +12,7 @@ const search = () => {
   goWiki(word)
 }
 
-inputField.addEventListener('input', (event) => {
+inputField.addEventListener('change', (event) => {
   results.innerHTML = ''
   search();
 })
