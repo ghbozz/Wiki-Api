@@ -10,7 +10,6 @@ const goWiki = (word) => {
 
 const search = () => {
   const word = inputField.value
-  results.innerHTML = ''
   goWiki(word)
 }
 
