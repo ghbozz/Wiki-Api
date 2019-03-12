@@ -1,5 +1,6 @@
 const inputField = document.getElementById('search')
 const results = document.getElementById('results')
+const textResult = document.getElementById('text-result')
 
 const goWiki = (word) => {
   fetch("https://cors-anywhere.herokuapp.com/" + `https://fr.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages%7Cpageterms%7Cdescription%7Ciwlinks&iwurl=1&generator=prefixsearch&redirects=1&formatversion=2&piprop=thumbnail&pithumbsize=300&pilimit=10&wbptterms=description&gpssearch=${word}&gpslimit=20`)
@@ -8,12 +9,27 @@ const goWiki = (word) => {
     // .then(data => console.log(data))
 }
 
+const fetchContent = (word) => {
+  fetch("https://cors-anywhere.herokuapp.com/" + `https://fr.wikipedia.org/w/api.php?action=parse&page=${word}&format=json`)
+  .then(response => response.json())
+  .then(data => insertText(data))
+}
+
 const search = () => {
   const word = inputField.value
   goWiki(word)
 }
 
-inputField.addEventListener('input', (event) => {
+const selectBtns = () => {
+  const btns = document.querySelectorAll('.see-btn')
+  btns.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      fetchContent(`${event.target.outerHTML.split('data="')[1].split('"')[0].replace(/\s/, '_')}`)
+    })
+  })
+}
+
+inputField.addEventListener('change', (event) => {
   results.innerHTML = ''
   search();
 })
@@ -21,6 +37,7 @@ inputField.addEventListener('input', (event) => {
 //////// INSERT DATA FUNCTION //////////
 
 const insertData = (data) => {
+  textResult.innerHTML = ''
   for (var i = 0; i < data.length; i++) {
     if (data[i].thumbnail) {
       const result = `
@@ -44,6 +61,7 @@ const insertData = (data) => {
           ${data[i].terms ? data[i].terms.description[0] : '...'}
           <a href="${data[i].title ? 'https://fr.wikipedia.org/wiki/' + data[i].title.replace(/\s/, '_') : '#'}">Go Wiki</a>
           <br>
+          <button data="${data[i].title}" class="see-btn button">See...</button>
         </div>
       </div>
     </div>
@@ -51,4 +69,11 @@ const insertData = (data) => {
       results.insertAdjacentHTML('beforeend', result)
     }
   }
+  selectBtns();
 };
+
+const insertText = (data) => {
+  // console.log(data.parse.wikitext['*'])
+  results.innerHTML = ''
+  textResult.innerHTML = data.parse.text['*']
+}
