@@ -2,10 +2,9 @@ const inputField = document.getElementById('search')
 const results = document.getElementById('results')
 
 const goWiki = (word) => {
-  fetch("https://cors-anywhere.herokuapp.com/" + `https://en.wikipedia.org///w/api.php?action=query&format=json&prop=pageimages%7Cpageterms%7Cdescription%7Ciwlinks&iwurl=1&generator=prefixsearch&redirects=1&formatversion=2&piprop=thumbnail&pithumbsize=300&pilimit=10&wbptterms=description&gpssearch=${word}&gpslimit=10`)
-    .then(data => data.json())
-    // .then(results => console.log(results.query.pages))
-    .then(results => insertData(results.query.pages))
+  fetch("https://cors-anywhere.herokuapp.com/" + `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages%7Cpageterms%7Cdescription%7Ciwlinks&iwurl=1&generator=prefixsearch&redirects=1&formatversion=2&piprop=thumbnail&pithumbsize=300&pilimit=10&wbptterms=description&gpssearch=${word}&gpslimit=10`)
+    .then(response => response.json())
+    .then(data => data.query ? insertData(data.query.pages) : console.log('...'))
 }
 
 const search = () => {
